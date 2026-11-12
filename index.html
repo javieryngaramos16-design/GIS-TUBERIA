@@ -8,11 +8,11 @@
 <meta name="theme-color" content="#0a1712">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
+ 
 <style>
   :root{
     --ink:#0b1210;
@@ -38,7 +38,7 @@
     -webkit-user-select:none;user-select:none;
   }
   #app{position:fixed;inset:0;touch-action:none;}
-
+ 
   /* ---------- video / canvas layers ---------- */
   #camVideo{
     position:absolute;inset:0;width:100%;height:100%;
@@ -47,7 +47,7 @@
   }
   #glCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
   #planCanvas{position:absolute;inset:0;width:100%;height:100%;display:none;background:#0a1712;}
-
+ 
   /* ---------- start screen ---------- */
   #startScreen{
     position:absolute;inset:0;z-index:50;
@@ -95,7 +95,7 @@
   .btn .dot{width:8px;height:8px;border-radius:50%;background:var(--text-dim);flex:0 0 auto;}
   .btn .dot.ok{background:var(--accent);box-shadow:0 0 8px var(--accent);}
   .btn .dot.bad{background:var(--err);}
-
+ 
   #permLog{
     width:100%;max-width:360px;text-align:left;
     background:#08120e;border:1px solid #1c3529;border-radius:8px;
@@ -104,7 +104,7 @@
   }
   #permLog div{opacity:0;animation:fadeIn .3s forwards;}
   @keyframes fadeIn{to{opacity:1;}}
-
+ 
   #httpsBanner{
     position:absolute;top:calc(var(--safe-t) + 8px);left:8px;right:8px;z-index:60;
     background:linear-gradient(90deg,#3a1a12,#4a2116);
@@ -113,7 +113,7 @@
     display:none;align-items:center;gap:8px;line-height:1.4;
   }
   #httpsBanner.show{display:flex;}
-
+ 
   /* ---------- HUD ---------- */
   #hud{
     position:absolute;inset:0;z-index:20;pointer-events:none;
@@ -142,7 +142,7 @@
   #statusPanel .chev{transition:transform .25s ease;color:var(--text-dim);}
   #statusPanel.collapsed .chev{transform:rotate(-90deg);}
   #statusPanel .body{margin-top:6px;}
-
+ 
   #miniControls{display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:auto;}
   .iconBtn{
     width:44px;height:44px;border-radius:10px;
@@ -165,7 +165,7 @@
     text-align:center;pointer-events:none;z-index:25;
   }
   #inspectHint.show{display:block;}
-
+ 
   #loadKmzWrap{
     position:absolute;left:calc(var(--safe-l) + 8px);right:calc(var(--safe-r) + 8px);
     bottom:calc(var(--safe-b) + 14px);
@@ -185,7 +185,7 @@
   #kmzInfo.show{display:block;}
   #kmzInfo.open{opacity:1;transform:scale(1) translateY(0);}
   #kmzInfo b{color:var(--accent);}
-
+ 
   #compassWrap{
     position:absolute;right:calc(var(--safe-r) + 12px);
     top:50%;transform:translateY(-50%);
@@ -203,7 +203,7 @@
     margin-left:-1px;box-shadow:0 0 6px var(--accent);
   }
   #compassN{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--accent);}
-
+ 
   #watchdogToast, #errToast, #compassCalToast{
     position:absolute;left:50%;bottom:calc(var(--safe-b) + 90px);transform:translateX(-50%);
     background:#3a1a12;border:1px solid var(--warn);color:#ffd699;
@@ -213,9 +213,9 @@
   #watchdogToast.show, #errToast.show, #compassCalToast.show{display:block;}
   #errToast{border-color:var(--err);color:#ffc4c4;background:#3a1212;}
   #compassCalToast{border-color:#4aa8ff;color:#cfe8ff;background:#0f2a3a;bottom:calc(var(--safe-b) + 140px);}
-
+ 
   input[type=file]{display:none;}
-
+ 
   @media (orientation: landscape){
     #statusPanel{max-width:230px;}
   }
@@ -225,37 +225,37 @@
 </head>
 <body>
 <div id="app">
-
+ 
   <!-- ============ CAPAS DE CÁMARA / 3D ============ -->
   <video id="camVideo" autoplay playsinline muted></video>
   <canvas id="glCanvas"></canvas>
   <canvas id="planCanvas"></canvas>
-
+ 
   <!-- ============ BANNER HTTPS ============ -->
   <div id="httpsBanner">
     ⚠️ Esta página no está en un contexto seguro (HTTPS). Cámara, GPS y sensores de orientación serán bloqueados por el navegador. Accede vía <b>https://</b> o <b>localhost</b>.
   </div>
-
+ 
   <!-- ============ PANTALLA DE INICIO ============ -->
   <div id="startScreen">
     <div class="grid-deco"></div>
     <h1>AR·GIS — Visor de Tuberías</h1>
     <p class="sub">Superpone el trazado real de tuberías (KMZ) sobre la vista de tu cámara, georreferenciado con GPS + brújula del dispositivo.</p>
-
+ 
     <button id="btnStart" class="btn primary">
       <span class="dot" id="startDot"></span>
       Iniciar sistema (Cámara + GPS)
     </button>
-
+ 
     <button id="btnLoadKmzStart" class="btn secondary" disabled>
       <span>📂</span> Cargar KMZ
     </button>
-
+ 
     <div id="permLog"></div>
   </div>
-
+ 
   <input type="file" id="kmzFileInput" accept=".kmz" multiple>
-
+ 
   <!-- ============ HUD ============ -->
   <div id="hud">
     <div id="topBar">
@@ -275,7 +275,7 @@
           <div class="row"><span class="k">KMZ</span><span class="v" id="valKmz">sin cargar</span></div>
         </div>
       </div>
-
+ 
       <div id="miniControls">
         <div class="iconBtn" id="btnLoadKmzHud" title="Cargar KMZ">📂</div>
         <div class="iconBtn" id="btnManualMode" title="Modo manual (arrastrar para rotar)">🖱️</div>
@@ -284,20 +284,20 @@
         <div class="iconBtn" id="btnProps" title="Capas y propiedades" style="display:none;">📋</div>
       </div>
     </div>
-
+ 
     <div id="compassWrap">
       <div id="compass">
         <span id="compassN">N</span>
         <div id="compassNeedle"></div>
       </div>
     </div>
-
+ 
     <div id="kmzInfo"></div>
-
+ 
     <div id="manualHint">🖱️ Modo manual: arrastra para mirar alrededor · ← → ↑ ↓ también funcionan</div>
-
+ 
     <div id="inspectHint">🔍 Vista de inspección · doble toque para volver a la realidad</div>
-
+ 
     <div id="planZoomControls" style="display:none;position:absolute;right:calc(var(--safe-r) + 12px);bottom:calc(var(--safe-b) + 90px);flex-direction:column;gap:8px;pointer-events:auto;">
       <div class="iconBtn" id="btnPlanZoomIn" title="Acercar">➕</div>
       <div class="iconBtn" id="btnPlanZoomOut" title="Alejar">➖</div>
@@ -305,7 +305,7 @@
       <div class="iconBtn" id="btnPlanHeading" title="Mapa gira según hacia dónde miras">🧭</div>
       <div class="iconBtn" id="btnPlanCenter" title="Centrar en mi posición">🎯</div>
     </div>
-
+ 
     <div id="watchdogToast">
       ⚠️ Sin datos de orientación durante 3s. Verifica permisos de sensores del sitio, o que la página no esté embebida en un iframe.
     </div>
@@ -313,21 +313,25 @@
       🧭 El compás no está calibrado (iOS reporta heading inválido). Mueve el teléfono trazando un "8" en el aire varias veces para calibrarlo.
     </div>
     <div id="errToast"></div>
-
+ 
     <div id="loadKmzWrap"></div>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 (function(){
 "use strict";
-
+ 
 /* ============================================================
    UTILIDADES / ESTADO GLOBAL
 ============================================================ */
 const $ = (id) => document.getElementById(id);
-
+const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+function escapeHtml(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+ 
 const State = {
   gpsAcquired:false,
   userLatLon:null,        // {lat, lon, accuracy, alt}
@@ -353,8 +357,9 @@ const State = {
   manualAuto:false,
   kmzLoaded:false,
   layers:[],
+  settings:{ phoneHeight:1.5, vOffset:0, thickness:1, atSurface:false, useGpsAlt:false },
 };
-
+ 
 function logPerm(msg, ok){
   const el = document.createElement('div');
   el.textContent = (ok===true?'✔ ':ok===false?'✘ ':'· ') + msg;
@@ -362,7 +367,7 @@ function logPerm(msg, ok){
   $('permLog').appendChild(el);
   $('permLog').scrollTop = $('permLog').scrollHeight;
 }
-
+ 
 function showErrToast(msg, ms=4500){
   const t = $('errToast');
   t.textContent = '⚠️ ' + msg;
@@ -370,7 +375,7 @@ function showErrToast(msg, ms=4500){
   clearTimeout(showErrToast._h);
   showErrToast._h = setTimeout(()=>t.classList.remove('show'), ms);
 }
-
+ 
 /* Contexto seguro check */
 function checkSecureContext(){
   const secure = window.isSecureContext === true;
@@ -379,7 +384,7 @@ function checkSecureContext(){
   }
   return secure;
 }
-
+ 
 /* ============================================================
    MÓDULO: CÁMARA
 ============================================================ */
@@ -405,7 +410,7 @@ const CameraModule = {
     $('camVideo').srcObject = null;
   }
 };
-
+ 
 /* ============================================================
    MÓDULO: GEOLOCALIZACIÓN
 ============================================================ */
@@ -428,14 +433,14 @@ const GeoModule = {
     );
   }
 };
-
+ 
 /* ============================================================
    MÓDULO: ORIENTACIÓN DEL DISPOSITIVO
 ============================================================ */
 const OrientationModule = {
   screenAngle:0,
   listenersAttached:false,
-
+ 
   async requestPermissionIfNeeded(){
     // iOS 13+ requiere permiso explícito bajo gesto de usuario
     const DOE = window.DeviceOrientationEvent;
@@ -447,21 +452,54 @@ const OrientationModule = {
     }
     return true;
   },
-
+ 
+  genericSensor:null,
+ 
+  /* Generic Sensor API (Chrome/Android): entrega la orientación ABSOLUTA ya
+     fusionada (giroscopio + acelerómetro + magnetómetro). Es más confiable que
+     los eventos deviceorientation, que a veces nunca disparan. */
+  startGenericSensor(onUpdate){
+    if (this.genericSensor || !('AbsoluteOrientationSensor' in window)) return false;
+    try{
+      const sensor = new AbsoluteOrientationSensor({ frequency: 60, referenceFrame: 'screen' });
+      sensor.addEventListener('reading', ()=>{
+        const q = sensor.quaternion;
+        if (!q) return;
+        State.lastOrientationEventTs = Date.now();
+        State.genericActive = true;
+        State.genericError = null;
+        SceneModule.setSensorQuaternion(q);
+        State.debugOrientation = { type:'AbsoluteOrientationSensor', absolute:true, hasCompassHeading:false,
+                                   alpha:null, beta:null, gamma:null };
+        onUpdate({ alpha:null, beta:null, gamma:null, heading:State.heading, generic:true });
+      });
+      sensor.addEventListener('error', (ev)=>{
+        State.genericError = (ev.error && ev.error.name) || 'error';
+      });
+      sensor.start();
+      this.genericSensor = sensor;
+      return true;
+    }catch(err){
+      State.genericError = err.name || String(err);
+      return false;
+    }
+  },
+ 
   start(onUpdate){
     if(this.listenersAttached) return;
     this.listenersAttached = true;
-
+ 
     // ¿Ya recibimos alguna vez un heading de fuente FIABLE (absoluta)?
     // Una vez que sí, ignoramos el yaw de eventos no-absolutos para que no
     // "congelen" o pisen el heading bueno con un alpha relativo al encendido
     // del sensor (típico en Android sin fusión de magnetómetro).
     this.hasReliableSource = false;
     this.compassWarned = false;
-
+ 
     const handler = (e) => {
+      if (State.genericActive) return;   // el sensor genérico ya manda
       State.lastOrientationEventTs = Date.now();
-
+ 
       // webkitCompassHeading === -1 significa "brújula sin calibrar" (documentado
       // por Apple) — NO es un heading válido, aunque sea un número normal (no NaN).
       // Si no se filtra, produce un heading falso y FIJO para siempre, dando la
@@ -470,11 +508,11 @@ const OrientationModule = {
         typeof e.webkitCompassHeading === 'number' &&
         !isNaN(e.webkitCompassHeading) &&
         e.webkitCompassHeading >= 0;
-
+ 
       const isAbsoluteSource = hasValidCompassHeading || e.absolute === true;
-
+ 
       let heading = null;
-
+ 
       if (hasValidCompassHeading) {
         heading = e.webkitCompassHeading;
         State.compassNeedsCalibration = false;
@@ -486,26 +524,26 @@ const OrientationModule = {
         // No sustituye un heading bueno una vez que ya llegó uno confiable.
         heading = 360 - e.alpha;
       }
-
+ 
       if (isAbsoluteSource) this.hasReliableSource = true;
-
+ 
       // Blindaje contra NaN/Infinity: un heading inválido NUNCA debe llegar a
       // Three.js (podría congelar el render loop silenciosamente).
       if (heading !== null && (isNaN(heading) || !isFinite(heading))){
         heading = null;
       }
-
+ 
       // ¿Compás de iOS presente pero sin calibrar? avisamos al usuario una vez.
       if (typeof e.webkitCompassHeading === 'number' && e.webkitCompassHeading === -1 && !this.compassWarned){
         this.compassWarned = true;
         State.compassNeedsCalibration = true;
       }
-
+ 
       if (heading !== null){
         heading = ((heading % 360) + 360) % 360;
         State.heading = heading;
       }
-
+ 
       // Debug crudo (para diagnóstico visible en el HUD)
       State.debugOrientation = {
         type: e.type,
@@ -514,16 +552,16 @@ const OrientationModule = {
         compassRaw: e.webkitCompassHeading,
         alpha: e.alpha, beta: e.beta, gamma: e.gamma
       };
-
+ 
       onUpdate({
         alpha: e.alpha, beta: e.beta, gamma: e.gamma,
         heading: State.heading
       });
     };
-
+ 
     window.addEventListener('deviceorientationabsolute', handler, true);
     window.addEventListener('deviceorientation', handler, true);
-
+ 
     // Ángulo de orientación de pantalla (para compensar landscape/portrait)
     const updateScreenAngle = () => {
       this.screenAngle = (screen.orientation && typeof screen.orientation.angle === 'number')
@@ -534,7 +572,7 @@ const OrientationModule = {
     window.addEventListener('orientationchange', updateScreenAngle);
     if (screen.orientation) screen.orientation.addEventListener('change', updateScreenAngle);
   },
-
+ 
   startWatchdog(){
     State.lastOrientationEventTs = Date.now(); // dar margen inicial
     setInterval(()=>{
@@ -547,12 +585,12 @@ const OrientationModule = {
     }, 1000);
   }
 };
-
+ 
 /* ============================================================
    MÓDULO: KMZ (JSZip + parseo KML + proj4)
 ============================================================ */
 const KmzModule = {
-
+ 
   /* Extrae texto de un tag hijo directo o descendiente, tolerante a namespaces
      (KML normalmente declara xmlns="http://www.opengis.net/kml/2.2", y
      getElementsByTagName SÍ funciona con el localName aun con ns por defecto,
@@ -570,7 +608,7 @@ const KmzModule = {
     const CODIGO_KEYS = ['codigo','código','id','id_tuberia','cod_tuberia','tag'];
     const PRESION_KEYS = ['presion','presión','pressure','presion_bar'];
     const FECHA_KEYS = ['fecha','fecha_instalacion','install_date','fecha_inst','año','ano','year'];
-
+ 
     const findKey = (obj, candidates) => {
       const keys = Object.keys(obj);
       for (const cand of candidates){
@@ -579,7 +617,7 @@ const KmzModule = {
       }
       return null;
     };
-
+ 
     let diameterRaw = findKey(extendedData, DIAM_KEYS);
     let depthRaw = findKey(extendedData, DEPTH_KEYS);
     const materialRaw = findKey(extendedData, MATERIAL_KEYS);
@@ -587,7 +625,7 @@ const KmzModule = {
     const codigoRaw = findKey(extendedData, CODIGO_KEYS);
     const presionRaw = findKey(extendedData, PRESION_KEYS);
     const fechaRaw = findKey(extendedData, FECHA_KEYS);
-
+ 
     let diameterMm = null;
     if (diameterRaw !== null){
       const n = parseFloat(String(diameterRaw).replace(',', '.'));
@@ -596,13 +634,13 @@ const KmzModule = {
         diameterMm = n < 10 ? n * 1000 /* asumimos metros */ : n;
       }
     }
-
+ 
     let depthM = null;
     if (depthRaw !== null){
       const n = parseFloat(String(depthRaw).replace(',', '.'));
       if (!isNaN(n)) depthM = n;
     }
-
+ 
     return {
       diameterMm, depthM,
       material: materialRaw !== null ? String(materialRaw) : null,
@@ -612,16 +650,17 @@ const KmzModule = {
       fecha: fechaRaw !== null ? String(fechaRaw) : null
     };
   },
-
+ 
   _firstChildText(node, tagName){
     let els = node.getElementsByTagName(tagName);
     if (els.length === 0) els = node.getElementsByTagName('kml:' + tagName);
     return els.length ? (els[0].textContent || '').trim() : '';
   },
-
+ 
   _parseCoordsText(coordsText){
     return coordsText
       .trim()
+      .replace(/\s*,\s*/g, ',')
       .split(/\s+/)
       .filter(Boolean)
       .map(triplet => {
@@ -631,7 +670,7 @@ const KmzModule = {
       })
       .filter(v => !isNaN(v.lon) && !isNaN(v.lat));
   },
-
+ 
   /* Extrae pares clave/valor de <ExtendedData><Data name="..."><value>...</value></Data></ExtendedData>
      y también del estilo <SimpleData name="..."> (usado por Shapefiles convertidos a KML). */
   _parseExtendedData(placemarkEl){
@@ -652,113 +691,114 @@ const KmzModule = {
     }
     return props;
   },
-
-  async loadFile(file){
-    const zip = await JSZip.loadAsync(file);
-    let kmlEntry = null;
-    zip.forEach((path, entry) => {
-      if(!kmlEntry && path.toLowerCase().endsWith('.kml')) kmlEntry = entry;
-    });
-    if(!kmlEntry) throw new Error('El KMZ no contiene un archivo .kml.');
-
-    const kmlText = await kmlEntry.async('text');
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(kmlText, 'application/xml');
-
-    if (xml.querySelector('parsererror')) {
-      throw new Error('Error al parsear el XML del KML.');
-    }
-
-    // Recorremos TODOS los Placemarks (no solo el primero), para no perder
-    // propiedades (nombre, descripción, ExtendedData) de cada tramo/tubería.
-    let placemarkEls = Array.from(xml.getElementsByTagName('Placemark'));
-    if (placemarkEls.length === 0){
-      // Fallback: KML sin <Placemark> envolviendo la geometría directamente
-      placemarkEls = [xml.documentElement];
-    }
-
-    const segments = [];
-
-    for (const pm of placemarkEls){
-      const name = this._firstChildText(pm, 'name');
-      const description = this._firstChildText(pm, 'description');
-      const extendedData = this._parseExtendedData(pm);
-      const pipeAttrs = this._extractPipeAttrs(extendedData);
-
-      let coordsText = null;
-      let geomType = null;
-
-      const lineStrings = pm.getElementsByTagName('LineString');
-      if (lineStrings.length > 0){
-        const coordsTag = lineStrings[0].getElementsByTagName('coordinates')[0];
-        if (coordsTag){ coordsText = coordsTag.textContent; geomType = 'LineString'; }
-      }
-      if (!coordsText){
-        const points = pm.getElementsByTagName('Point');
-        if (points.length > 0){
-          const coordsTag = points[0].getElementsByTagName('coordinates')[0];
-          if (coordsTag){ coordsText = coordsTag.textContent; geomType = 'Point'; }
+ 
+  _folderName(node){
+    let p = node.parentNode;
+    while (p && p.nodeType === 1){
+      if (p.nodeName === 'Folder' || p.nodeName === 'Document'){
+        for (const c of p.childNodes){
+          if (c.nodeType === 1 && c.nodeName === 'name') return (c.textContent || '').trim();
         }
       }
-      if (!coordsText) continue; // Placemark sin geometría soportada (carpeta, estilo, etc.)
-
-      const verticesLatLon = this._parseCoordsText(coordsText);
-      if (verticesLatLon.length === 0) continue;
-
-      segments.push({
-        name, description, extendedData, geomType, verticesLatLon,
-        diameterMm: pipeAttrs.diameterMm !== null ? pipeAttrs.diameterMm : 200, // default 200mm si no viene en el KMZ
-        depthM: pipeAttrs.depthM !== null ? pipeAttrs.depthM : 1.0,            // default 1.0m si no viene en el KMZ
-        material: pipeAttrs.material || 'PVC',
-        estado: pipeAttrs.estado || 'Operativo',
-        codigo: pipeAttrs.codigo || '',
-        presion: pipeAttrs.presion || '',
-        fecha: pipeAttrs.fecha || ''
-      });
+      p = p.parentNode;
     }
-
+    return '';
+  },
+ 
+  async loadFile(file){
+    const zip = await JSZip.loadAsync(file);
+    const kmlEntries = [];
+    zip.forEach((path, entry) => { if (!entry.dir && path.toLowerCase().endsWith('.kml')) kmlEntries.push(entry); });
+    if (!kmlEntries.length) throw new Error('El KMZ no contiene un archivo .kml.');
+    kmlEntries.sort((x, y) => (/doc\.kml$/i.test(y.name) ? 1 : 0) - (/doc\.kml$/i.test(x.name) ? 1 : 0));
+ 
+    const parser = new DOMParser();
+    const segments = [];
+ 
+    for (const entry of kmlEntries){
+      const xml = parser.parseFromString(await entry.async('text'), 'application/xml');
+      if (xml.querySelector('parsererror')) continue;
+ 
+      let placemarks = Array.from(xml.getElementsByTagName('Placemark'));
+      if (placemarks.length === 0) placemarks = [xml.documentElement];
+ 
+      for (const pm of placemarks){
+        const baseName = this._firstChildText(pm, 'name');
+        const description = this._firstChildText(pm, 'description');
+        const extendedData = this._parseExtendedData(pm);
+        const pipeAttrs = this._extractPipeAttrs(extendedData);
+        const folder = this._folderName(pm);
+ 
+        // TODAS las geometrías del Placemark (MultiGeometry puede traer varias líneas),
+        // y los contornos de polígonos (LinearRing) como líneas cerradas.
+        let geoms = [];
+        Array.from(pm.getElementsByTagName('LineString')).forEach(el => geoms.push({ type:'LineString', el }));
+        Array.from(pm.getElementsByTagName('LinearRing')).forEach(el => geoms.push({ type:'Polígono', el }));
+        if (geoms.length === 0){
+          Array.from(pm.getElementsByTagName('Point')).forEach(el => geoms.push({ type:'Point', el }));
+        }
+ 
+        geoms.forEach((g, gi) => {
+          const coordsTag = g.el.getElementsByTagName('coordinates')[0];
+          if (!coordsTag) return;
+          const verticesLatLon = this._parseCoordsText(coordsTag.textContent || '');
+          if (verticesLatLon.length === 0) return;
+          segments.push({
+            name: baseName ? (geoms.length > 1 ? baseName + ' (' + (gi + 1) + ')' : baseName) : '',
+            folder, description, extendedData, geomType: g.type, verticesLatLon,
+            diameterMm: pipeAttrs.diameterMm !== null ? pipeAttrs.diameterMm : 200,
+            depthM: pipeAttrs.depthM !== null ? pipeAttrs.depthM : 1.0,
+            material: pipeAttrs.material || 'PVC',
+            estado: pipeAttrs.estado || 'Operativo',
+            codigo: pipeAttrs.codigo || '',
+            presion: pipeAttrs.presion || '',
+            fecha: pipeAttrs.fecha || ''
+          });
+        });
+      }
+    }
+ 
     if (segments.length === 0){
-      throw new Error('No se encontró <LineString> ni <Point> con coordenadas válidas en el KML.');
+      throw new Error('No se encontró ninguna línea, polígono o punto con coordenadas válidas en el KML.');
     }
-
     return { segments };
   },
-
+ 
   computeUTMZone(lon){
     return Math.floor((lon + 180) / 6) + 1;
   },
-
+ 
   buildProjString(zone, isNorth){
     return `+proj=utm +zone=${zone} ${isNorth ? '' : '+south '}+datum=WGS84 +units=m +no_defs`;
   },
-
+ 
   latLonToUTM(lat, lon, projStr){
     // proj4('WGS84', utmProj, [lon, lat]) -> [easting, northing]
     const [easting, northing] = proj4('WGS84', projStr, [lon, lat]);
     return { easting, northing };
   }
 };
-
+ 
 /* ============================================================
    MÓDULO: ESCENA 3D (Three.js)
 ============================================================ */
 const SceneModule = {
   renderer:null, scene:null, camera:null, pipelineGroup:null,
   width:0, height:0,
-
+ 
   init(){
     const canvas = $('glCanvas');
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-
+ 
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setSize(this.width, this.height);
-
+ 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(65, this.width/this.height, 0.1, 5000);
     this.camera.position.set(0,1.5,0); // altura aprox de mano/ojo
-
+ 
     // Iluminación simple (los materiales serán básicos/emissive para visibilidad en AR)
     const hemi = new THREE.HemisphereLight(0xffffff, 0x222222, 1.0);
     this.scene.add(hemi);
@@ -770,16 +810,16 @@ const SceneModule = {
     const dirLight2 = new THREE.DirectionalLight(0x88bbff, 0.4);
     dirLight2.position.set(-3, 2, -2);
     this.scene.add(dirLight2);
-
+ 
     this.pipelineGroup = new THREE.Group();
     this.scene.add(this.pipelineGroup);
-
+ 
     window.addEventListener('resize', ()=>this.onResize());
-
+ 
     this._clock = new THREE.Clock();
     this.renderer.setAnimationLoop(()=>this.render());
   },
-
+ 
   render(){
     try{
       const delta = this._clock ? this._clock.getDelta() : 0.016;
@@ -797,7 +837,7 @@ const SceneModule = {
       console.error('Error de render (recuperado):', err);
     }
   },
-
+ 
   onResize(){
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -805,7 +845,7 @@ const SceneModule = {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.width, this.height);
   },
-
+ 
   /* Reconstruye TODAS las capas de tuberías dentro de pipelineGroup (que sigue
      siendo el único objeto reposicionado por GPS — todas las capas comparten
      el mismo ancla global, así que una sola actualización de posición basta
@@ -816,7 +856,7 @@ const SceneModule = {
       const child = this.pipelineGroup.children.pop();
       this._disposeObject3D(child);
     }
-
+ 
     layers.forEach(layer => {
       const layerGroup = new THREE.Group();
       layerGroup.visible = layer.visible !== false;
@@ -825,14 +865,14 @@ const SceneModule = {
       this.pipelineGroup.add(layerGroup);
     });
   },
-
+ 
   _disposeObject3D(obj){
     obj.traverse ? obj.traverse(o => {
       o.geometry && o.geometry.dispose();
       o.material && o.material.dispose();
     }) : (() => { obj.geometry && obj.geometry.dispose(); obj.material && obj.material.dispose(); })();
   },
-
+ 
   /* Reconstruye SOLO una capa (p.ej. al cambiar su color o el diámetro/
      profundidad de un tramo), sin tocar las demás capas ya cargadas. */
   rebuildLayer(layer, anchorUTM){
@@ -846,7 +886,7 @@ const SceneModule = {
     layer.threeGroup = layerGroup;
     this.pipelineGroup.add(layerGroup);
   },
-
+ 
   removeLayer(layer){
     if (layer.threeGroup){
       this.pipelineGroup.remove(layer.threeGroup);
@@ -854,7 +894,7 @@ const SceneModule = {
       layer.threeGroup = null;
     }
   },
-
+ 
   /* Construye los tramos de UNA capa (todos con el mismo color, el color de
      esa capa/tubería) dentro del THREE.Group indicado. Todas las coordenadas
      son offsets locales respecto al ancla global fija — evita errores de
@@ -862,15 +902,15 @@ const SceneModule = {
   _buildLayerSegments(group, segmentsUTM, anchorUTM, colorHex){
     const color = colorHex !== undefined && colorHex !== null ? colorHex : 0xff2323;
     const MIN_VISUAL_RADIUS = 0.03; // piso mínimo para que tuberías muy delgadas sigan siendo visibles a distancia
-
+ 
     segmentsUTM.forEach((seg) => {
       // Diámetro real de la tubería (mm -> m -> radio) y profundidad de tapada (m).
       // Estos valores vienen del KMZ (ExtendedData) o de lo que el usuario edite
       // manualmente en el panel; nunca se inventan sin que quede visible el dato.
       const diameterMm = seg.diameterMm || 200;
-      const depthM = (seg.depthM !== undefined && seg.depthM !== null) ? seg.depthM : 1.0;
-      const tubeRadius = Math.max(diameterMm / 2000, MIN_VISUAL_RADIUS);
-
+      const depthM = State.settings.atSurface ? 0.05 : ((seg.depthM !== undefined && seg.depthM !== null) ? seg.depthM : 1.0);
+      const tubeRadius = Math.max((diameterMm / 2000) * State.settings.thickness, MIN_VISUAL_RADIUS);
+ 
       const points = seg.verticesUTM.map(v => {
         const dx = v.easting  - anchorUTM.easting;      // UTM Este  -> +X
         const dz = -(v.northing - anchorUTM.northing);  // UTM Norte -> -Z
@@ -879,7 +919,7 @@ const SceneModule = {
         const dy = ((v.alt || 0) - (anchorUTM.alt || 0)) - depthM;
         return new THREE.Vector3(dx, dy, dz);
       });
-
+ 
       if (points.length === 1){
         // fallback Point: esfera marcador (a la profundidad indicada)
         const geo = new THREE.SphereGeometry(Math.max(tubeRadius, 0.15), 24, 24);
@@ -887,7 +927,7 @@ const SceneModule = {
         const marker = new THREE.Mesh(geo, mat);
         marker.position.copy(points[0]);
         group.add(marker);
-
+ 
         const ring = new THREE.Mesh(
           new THREE.RingGeometry(tubeRadius*2, tubeRadius*2.6, 32),
           new THREE.MeshBasicMaterial({ color, side:THREE.DoubleSide, transparent:true, opacity:0.5 })
@@ -897,14 +937,15 @@ const SceneModule = {
         group.add(ring);
         return;
       }
-
+ 
       // LineString -> forma real de TUBERÍA: cilindro con más segmentos radiales
       // (se ve redondo, no una tira plana), con tapas circulares en los extremos.
       const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.0);
-      const tubularSegments = Math.max(points.length * 10, 48);
-      const RADIAL_SEGMENTS = 20; // más segmentos = perfil más redondo, menos "poligonal"
+      const many = segmentsUTM.length > 120;   // muchos tramos: geometría más liviana
+      const tubularSegments = many ? Math.max(points.length * 3, 8) : Math.max(points.length * 10, 48);
+      const RADIAL_SEGMENTS = many ? 8 : 20; // más segmentos = perfil más redondo, menos "poligonal"
       const tubeGeo = new THREE.TubeGeometry(curve, tubularSegments, tubeRadius, RADIAL_SEGMENTS, false);
-
+ 
       // Material con sombreado (no plano): permite ver el volumen cilíndrico real
       const tubeMat = new THREE.MeshStandardMaterial({
         color, metalness:0.35, roughness:0.45,
@@ -913,7 +954,7 @@ const SceneModule = {
       });
       const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
       group.add(tubeMesh);
-
+ 
       // Tapas circulares en cada extremo (como un corte real de tubería)
       const capMat = new THREE.MeshStandardMaterial({
         color, metalness:0.35, roughness:0.45, transparent:true, opacity:0.75, side:THREE.DoubleSide
@@ -930,12 +971,12 @@ const SceneModule = {
           cap.lookAt(pos.clone().add(normal));
           group.add(cap);
         });
-
+ 
       // Línea guía brillante central (estilo referencia) por encima del volumen del tubo
       const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
       const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth:2, transparent:true, opacity:0.9 });
       group.add(new THREE.Line(lineGeo, lineMat));
-
+ 
       const startGeo = new THREE.SphereGeometry(Math.max(tubeRadius*0.7, 0.035), 10, 10);
       const startMat = new THREE.MeshBasicMaterial({ color:0xffe066 });
       const startMarker = new THREE.Mesh(startGeo, startMat);
@@ -943,7 +984,7 @@ const SceneModule = {
       group.add(startMarker);
     });
   },
-
+ 
   /* Reposiciona SOLO el grupo (no reconstruye vértices) según desplazamiento
      entre el ancla fija y la posición GPS actual del usuario. En vez de
      "saltar" el grupo instantáneamente (el GPS solo actualiza ~1 vez/seg),
@@ -951,22 +992,24 @@ const SceneModule = {
      smoothStep(), para que al caminar la línea se deslice de forma continua
      en vez de dar saltos perceptibles cada vez que llega un nuevo fix. */
   _targetPos: null,
-
+ 
   updateGroupPosition(userUTM, anchorUTM){
     if (!userUTM || !anchorUTM) return;
     const dx = -(userUTM.easting  - anchorUTM.easting);
     const dz =  (userUTM.northing - anchorUTM.northing);
-    const dy = -((userUTM.alt || 0) - (anchorUTM.alt || 0));
+    // La altitud del GPS del celular es muy imprecisa (±20 m) y NO es comparable con la del KMZ
+    // (normalmente 0 = pegado al terreno). Por defecto se asume que el piso está a tus pies.
+    const dy = (State.settings.useGpsAlt ? -((userUTM.alt || 0) - (anchorUTM.alt || 0)) : 0) + State.settings.vOffset;
     if (!this._targetPos) this._targetPos = new THREE.Vector3(dx, dy, dz);
     this._targetPos.set(dx, dy, dz);
-
+ 
     // Primera vez: no interpolar desde (0,0,0), saltar directo al objetivo.
     if (!this._smoothInit){
       this.pipelineGroup.position.copy(this._targetPos);
       this._smoothInit = true;
     }
   },
-
+ 
   /* Llamado en cada frame de render: acerca gradualmente la posición actual
      del grupo hacia el último objetivo GPS conocido (interpolación exponencial,
      independiente del framerate). */
@@ -977,7 +1020,7 @@ const SceneModule = {
     const t = 1 - Math.exp(-smoothing * Math.max(deltaSeconds, 0));
     this.pipelineGroup.position.lerp(this._targetPos, t);
   },
-
+ 
   /* Compone la rotación de la cámara usando el algoritmo estándar W3C
      (idéntico al de THREE.DeviceOrientationControls, ampliamente probado),
      sustituyendo el componente de yaw (alpha) por el heading ya calibrado
@@ -985,8 +1028,27 @@ const SceneModule = {
      -Z de la escena se mantenga alineado con el Norte real. */
   _qTmp0: null, _qTmp1: null, _euler: null, _zee: null,
   _baseQuat: new THREE.Quaternion(),
+ 
+  /* q = [x,y,z,w] del AbsoluteOrientationSensor (ejes Este, Norte, Arriba).
+     Three.js usa X=Este, Y=Arriba, Z=-Norte, así que giramos -90° sobre X. */
+  setSensorQuaternion(q){
+    if (State.manualMode) return;
+    if (!this._qEnu){
+      this._qEnu = new THREE.Quaternion();
+      this._qR = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
+      this._fwd = new THREE.Vector3();
+    }
+    this._qEnu.set(q[0], q[1], q[2], q[3]);
+    this._baseQuat.copy(this._qR).multiply(this._qEnu);
+    // Rumbo = hacia dónde apunta la cámara (si mira muy arriba/abajo, se conserva el último)
+    this._fwd.set(0,0,-1).applyQuaternion(this._baseQuat);
+    if (Math.hypot(this._fwd.x, this._fwd.z) > 0.2){
+      const h = Math.atan2(this._fwd.x, -this._fwd.z) * 180 / Math.PI;
+      State.heading = (h + 360) % 360;
+    }
+  },
   _inspecting: false,
-
+ 
   /* Compone la vista final cada frame: orientación base (sensores o modo manual)
      + desplazamientos de INSPECCIÓN hechos con el dedo (girar, inclinar, alejar).
      Con sensores activos el teléfono manda; el toque solo "mira alrededor". */
@@ -1001,15 +1063,15 @@ const SceneModule = {
     this._vP.setFromAxisAngle(this._right, D(State.viewPitch));
     this.camera.quaternion.copy(this._vY).multiply(this._baseQuat).multiply(this._vP);
     this._back.set(0,0,1).applyQuaternion(this.camera.quaternion).multiplyScalar(State.viewDolly);
-    this.camera.position.set(0,1.5,0).add(this._back);
-
+    this.camera.position.set(0, State.settings.phoneHeight, 0).add(this._back);
+ 
     const insp = Math.abs(State.viewYaw) > 1 || Math.abs(State.viewPitch) > 1 || State.viewDolly > 0.5;
     if (insp !== this._inspecting){
       this._inspecting = insp;
       $('inspectHint').classList.toggle('show', insp);
     }
   },
-
+ 
   updateCameraOrientation(beta, gamma, alpha, heading, screenAngleDeg){
     // Modo manual (desktop sin sensores, o activado a mano): ignoramos los
     // sensores del dispositivo y componemos la cámara solo con heading/pitch
@@ -1022,42 +1084,42 @@ const SceneModule = {
       this._baseQuat.copy(qHeading.multiply(qPitch));
       return;
     }
-
+ 
     if (heading === null || heading === undefined) return;
     if (isNaN(heading) || !isFinite(heading)) return; // blindaje extra
     if (beta === null || beta === undefined || isNaN(beta)) beta = 0;
     if (gamma === null || gamma === undefined || isNaN(gamma)) gamma = 0;
-
+ 
     const degToRad = THREE.MathUtils.degToRad;
-
+ 
     // Lazily init reusable objects
     if (!this._zee) this._zee = new THREE.Vector3(0, 0, 1);
     if (!this._euler) this._euler = new THREE.Euler();
     if (!this._qTmp0) this._qTmp0 = new THREE.Quaternion();
     // q1 = rotación de -90° sobre X (pasa de "pantalla plana mirando al cielo" a "pantalla vertical mirando al frente")
     if (!this._qTmp1) this._qTmp1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
-
+ 
     // IMPORTANTE: usamos 'heading' calibrado en vez del alpha crudo del sensor,
     // porque alpha solo no siempre referencia el Norte verdadero (deriva/offset
     // por calibración del magnetómetro). heading = 360 - alpha en nuestra convención,
     // así que reconstruimos un "alpha equivalente" a partir del heading:
     const alphaEquivalent = (360 - heading) % 360;
-
+ 
     this._euler.set(
       degToRad(beta),             // x: beta
       degToRad(alphaEquivalent),  // y: alpha (yaw) calibrado por heading
       degToRad(-gamma),           // z: -gamma
       'YXZ'
     );
-
+ 
     this._baseQuat.setFromEuler(this._euler);
     this._baseQuat.multiply(this._qTmp1); // corrección mundo (-90° X)
-
+ 
     // Corrección por rotación de pantalla (portrait/landscape/orientación invertida)
     const screenRad = -degToRad(screenAngleDeg || 0);
     this._qTmp0.setFromAxisAngle(this._zee, screenRad);
     this._baseQuat.multiply(this._qTmp0);
-
+ 
     // Blindaje final: si por cualquier motivo el quaternion quedó inválido
     // (NaN), lo reseteamos a identidad en vez de dejar que WebGL falle y
     // detenga el loop de render (eso sí produciría una escena "congelada").
@@ -1067,7 +1129,7 @@ const SceneModule = {
     }
   }
 };
-
+ 
 /* ============================================================
    ORQUESTACIÓN / CONTROLADOR PRINCIPAL
 ============================================================ */
@@ -1080,24 +1142,24 @@ const PlanViewModule = {
   canvas:null, ctx:null,
   scale: 8,          // píxeles por metro
   tiles: new Map(),  // caché de teselas satelitales
-
+ 
   init(){
     this.canvas = $('planCanvas');
     this.ctx = this.canvas.getContext('2d');
     this.resize();
     window.addEventListener('resize', ()=> this.resize());
   },
-
+ 
   resize(){
     if (!this.canvas) return;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   },
-
+ 
   zoom(factor){ this.scale = Math.max(0.2, Math.min(120, this.scale * factor)); },
   recenter(){ State.planPanE = 0; State.planPanN = 0; },
   _heading(){ return State.manualMode ? State.manualHeading : (State.heading || 0); },
-
+ 
   // Arrastre con el dedo: desplaza el mapa (corrigiendo si el mapa está girado)
   pan(dx, dy){
     const a = State.planHeadingUp ? THREE.MathUtils.degToRad(this._heading()) : 0;
@@ -1106,7 +1168,7 @@ const PlanViewModule = {
     State.planPanE -= wx / this.scale;
     State.planPanN += wy / this.scale;
   },
-
+ 
   _tile(z, x, y){
     const key = z + '/' + x + '/' + y;
     let img = this.tiles.get(key);
@@ -1118,7 +1180,7 @@ const PlanViewModule = {
     if (this.tiles.size > 400){ this.tiles.delete(this.tiles.keys().next().value); }
     return img;
   },
-
+ 
   // Dibuja imagen satelital (Web Mercator) alineada con el centro lat/lon del mapa
   _drawTiles(ctx, w, h, cx, cy, lat, lon){
     const R = 156543.03392804097, latR = lat * Math.PI / 180;
@@ -1141,17 +1203,17 @@ const PlanViewModule = {
       }
     }
   },
-
+ 
   draw(){
     const ctx = this.ctx;
     if (!ctx) return;
     const w = this.canvas.width, h = this.canvas.height;
     const cx = w/2, cy = h/2;
     const D = THREE.MathUtils.degToRad;
-
+ 
     ctx.fillStyle = '#0a1712';
     ctx.fillRect(0, 0, w, h);
-
+ 
     const userUTM = State.userUTM || State.anchorUTM;
     if (!userUTM){
       ctx.fillStyle = '#8fb8a8';
@@ -1160,16 +1222,16 @@ const PlanViewModule = {
       ctx.fillText('Esperando posición GPS…', cx, cy);
       return;
     }
-
+ 
     const heading = this._heading();
     const rot = State.planHeadingUp ? -D(heading) : 0;
     const cE = userUTM.easting + State.planPanE;
     const cN = userUTM.northing + State.planPanN;
     const sc = this.scale;
-
+ 
     ctx.save();
     ctx.translate(cx, cy); ctx.rotate(rot); ctx.translate(-cx, -cy);
-
+ 
     let hasSat = false;
     if (State.planSatellite){
       const base = State.userUTM ? State.userLatLon : State.anchorLatLon;
@@ -1181,7 +1243,7 @@ const PlanViewModule = {
       }
     }
     if (!hasSat) this._drawGrid(ctx, w, h, cx, cy);
-
+ 
     // Tuberías vistas desde arriba (con contorno oscuro para verse sobre el satélite)
     State.layers.forEach(layer => {
       if (!layer.visible) return;
@@ -1202,12 +1264,12 @@ const PlanViewModule = {
       });
     });
     ctx.restore();
-
+ 
     // Tu posición (el mapa puede estar desplazado o girado)
     const ox = -State.planPanE * sc, oy = State.planPanN * sc;
     const ux = cx + ox*Math.cos(rot) - oy*Math.sin(rot);
     const uy = cy + ox*Math.sin(rot) + oy*Math.cos(rot);
-
+ 
     if (State.userLatLon && State.userLatLon.accuracy){
       ctx.beginPath(); ctx.arc(ux, uy, State.userLatLon.accuracy * sc, 0, Math.PI*2);
       ctx.fillStyle = 'rgba(74,168,255,0.15)'; ctx.fill();
@@ -1225,7 +1287,7 @@ const PlanViewModule = {
     ctx.beginPath(); ctx.arc(ux, uy, 5, 0, Math.PI*2);
     ctx.fillStyle = '#fff'; ctx.fill();
     ctx.strokeStyle = '#4aa8ff'; ctx.lineWidth = 2; ctx.stroke();
-
+ 
     // Brújula (la N siempre señala el Norte real, aunque el mapa gire)
     ctx.save();
     ctx.translate(cx, 46);
@@ -1238,7 +1300,7 @@ const PlanViewModule = {
     ctx.fillStyle = '#2ee6a6'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
     ctx.fillText('N', 0, -22);
     ctx.restore();
-
+ 
     if (hasSat){
       ctx.fillStyle = 'rgba(255,255,255,0.7)';
       ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
@@ -1246,7 +1308,7 @@ const PlanViewModule = {
     }
     this._drawScaleBar(ctx, w, h);
   },
-
+ 
   _drawGrid(ctx, w, h, cx, cy){
     const niceSteps = [1,2,5,10,20,50,100,200,500,1000];
     const stepM = niceSteps.find(s => s * this.scale > 60) || 1000;
@@ -1257,7 +1319,7 @@ const PlanViewModule = {
     for (let x = offX; x < w; x += stepPx){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
     for (let y = offY; y < h; y += stepPx){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
   },
-
+ 
   _drawScaleBar(ctx, w, h){
     const niceSteps = [1,2,5,10,20,50,100,200,500,1000];
     const stepM = niceSteps.find(s => s * this.scale > 60) || 1000;
@@ -1275,18 +1337,18 @@ const PlanViewModule = {
     ctx.shadowBlur = 0;
   }
 };
-
-
-
+ 
+ 
+ 
 const App = {
   async start(){
     const btn = $('btnStart');
     btn.disabled = true;
     btn.querySelector('span:last-child') ? null : null;
     $('startDot').classList.remove('ok','bad');
-
+ 
     checkSecureContext();
-
+ 
     // IMPORTANTE — orden crítico en iOS Safari: DeviceOrientationEvent.requestPermission()
     // SOLO muestra el diálogo nativo si se llama de forma SÍNCRONA dentro del gesto
     // de clic del usuario (sin ningún 'await' antes). Si pedimos primero la cámara
@@ -1303,7 +1365,7 @@ const App = {
       showErrToast('Permiso de orientación denegado. La brújula no funcionará. Revisa Ajustes > Safari > Movimiento y orientación en iOS, o los permisos del sitio en Android.', 7000);
       // seguimos igual, no es bloqueante total
     }
-
+ 
     let cameraFailMsg = null;
     try{
       logPerm('Solicitando cámara trasera…');
@@ -1314,7 +1376,7 @@ const App = {
       logPerm('Cámara: ' + e.message, false);
       cameraFailMsg = 'Sin cámara (' + e.message + '). Abre la app desde una dirección https:// en Chrome y permite la cámara; toca 🗺️ y luego 📷 para reintentar.';
     }
-
+ 
     logPerm('Solicitando geolocalización de alta precisión…');
     GeoModule.start(
       (loc)=>{
@@ -1328,30 +1390,31 @@ const App = {
         showErrToast('Error de GPS: ' + err.message);
       }
     );
-
+ 
     OrientationModule.start((o)=> this.onOrientationUpdate(o));
+    OrientationModule.startGenericSensor((o)=> this.onOrientationUpdate(o));
     OrientationModule.startWatchdog();
-
+ 
     SceneModule.init();
     PlanViewModule.init();
-
+ 
     // Mostrar HUD, ocultar pantalla inicial
     $('startScreen').style.display = 'none';
     $('hud').classList.add('active');
     $('btnLoadKmzStart').disabled = false;
     if (cameraFailMsg) showErrToast(cameraFailMsg, 9000);
   },
-
+ 
   onGpsUpdate(loc){
     $('valAccuracy').textContent = (loc.accuracy ? loc.accuracy.toFixed(1) : '—') + ' m';
-
+ 
     if (State.proj){
       const utm = KmzModule.latLonToUTM(loc.lat, loc.lon, State.proj);
       State.userUTM = { easting: utm.easting, northing: utm.northing, alt: loc.alt };
       $('valEasting').textContent = utm.easting.toFixed(2) + ' m';
       $('valNorthing').textContent = utm.northing.toFixed(2) + ' m';
       $('valZone').textContent = State.zoneNumber + (State.zoneLetterN ? 'N' : 'S');
-
+ 
       if (State.anchorUTM){
         SceneModule.updateGroupPosition(State.userUTM, State.anchorUTM);
       }
@@ -1369,7 +1432,7 @@ const App = {
       $('valNorthing').textContent = 'pendiente KMZ';
     }
   },
-
+ 
   onOrientationUpdate(o){
     const heading = o.heading;
     // Si el modo manual se activó solo (no había sensores) y ahora llegan datos
@@ -1382,7 +1445,7 @@ const App = {
       $('valAzimuth').textContent = heading.toFixed(1) + '°';
       $('compassNeedle').style.transform = `rotate(${heading}deg)`;
     }
-
+ 
     // Diagnóstico crudo: útil para detectar sensores "congelados" o sin fusión de magnetómetro
     const dbg = State.debugOrientation;
     if (dbg){
@@ -1390,26 +1453,26 @@ const App = {
       const fmt = (v) => (typeof v === 'number' ? v.toFixed(0) : '—');
       $('valRawOrient').textContent = `${fmt(dbg.alpha)}° / ${fmt(dbg.beta)}° / ${fmt(dbg.gamma)}°`;
     }
-
+ 
     // Aviso de compás sin calibrar (webkitCompassHeading === -1 en iOS)
     $('compassCalToast').classList.toggle('show', !!State.compassNeedsCalibration);
-
-    SceneModule.updateCameraOrientation(o.beta, o.gamma, o.alpha, heading, OrientationModule.screenAngle);
+ 
+    if (!o.generic) SceneModule.updateCameraOrientation(o.beta, o.gamma, o.alpha, heading, OrientationModule.screenAngle);
   },
-
+ 
   /* Agrega un KMZ como una NUEVA CAPA (no reemplaza las anteriores). El
      primer KMZ cargado define el ancla global y la zona UTM; los siguientes
      reutilizan esa misma zona/proyección para que todas las capas queden
      en el mismo espacio de coordenadas Three.js y se puedan ver juntas. */
   layerColors: [0xff2323, 0x4aa8ff, 0xc9ff4a, 0xb083ff, 0xff8c1a, 0x2ee6a6, 0xff5c9a, 0xffe066],
   layerCounter: 0,
-
+ 
   async addKmzLayer(file){
     try{
       $('valKmz').textContent = 'procesando…';
       const { segments } = await KmzModule.loadFile(file);
       const first = segments[0].verticesLatLon[0];
-
+ 
       if (!State.proj){
         // Primer KMZ cargado: define el ancla y la zona UTM global
         const zone = KmzModule.computeUTMZone(first.lon);
@@ -1418,7 +1481,7 @@ const App = {
         State.zoneLetterN = isNorth;
         State.proj = KmzModule.buildProjString(zone, isNorth);
       }
-
+ 
       const segmentsUTM = segments.map(seg => ({
         ...seg,
         verticesUTM: seg.verticesLatLon.map(v => {
@@ -1426,7 +1489,7 @@ const App = {
           return { easting: utm.easting, northing: utm.northing, alt: v.alt };
         })
       }));
-
+ 
       if (!State.anchorUTM){
         State.anchorUTM = segmentsUTM[0].verticesUTM[0];
         State.anchorLatLon = first;
@@ -1436,30 +1499,31 @@ const App = {
         SceneModule._targetPos = null;
         SceneModule._smoothInit = false;
       }
-
+ 
       const layer = {
         id: 'layer_' + (this.layerCounter++),
         fileName: file.name,
         segmentsUTM,
         color: this.layerColors[State.layers.length % this.layerColors.length],
         visible: true,
+        open: State.layers.length === 0,
         threeGroup: null
       };
       State.layers.push(layer);
-
+ 
       SceneModule.rebuildLayer(layer, State.anchorUTM);
-
+ 
       State.kmzLoaded = true;
       const totalVerts = segments.reduce((n,s)=>n+s.verticesLatLon.length, 0);
       $('valKmz').textContent = `${State.layers.length} capa(s) cargada(s)`;
       $('valZone').textContent = State.zoneNumber + (State.zoneLetterN ? 'N' : 'S');
-
+ 
       this.renderLayersPanel();
       $('btnProps').style.display = 'flex';
       $('btnLayerToggle').style.display = 'flex';
-
+ 
       if (State.userLatLon) this.onGpsUpdate(State.userLatLon);
-
+ 
       logPerm(`Capa agregada: ${file.name} (${segments.length} tramo(s), ${totalVerts} pts)`, true);
     }catch(e){
       $('valKmz').textContent = 'error';
@@ -1467,94 +1531,158 @@ const App = {
       logPerm('KMZ error: ' + e.message, false);
     }
   },
-
+ 
   /* Dibuja el panel "Capas": una tarjeta por cada KMZ cargado, con selector
      de color, visibilidad, botón de eliminar, y los campos editables de
      diámetro/profundidad/material/etc. de sus tramos. */
+  _settingsOpen:false,
+ 
   renderLayersPanel(){
     const info = $('kmzInfo');
     if (State.layers.length === 0){
       info.innerHTML = '<span style="color:var(--text-dim)">Sin capas cargadas.</span>';
       return;
     }
-
-    let html = `<div style="margin-bottom:4px;"><b>Capas cargadas (${State.layers.length})</b> <span style="color:var(--text-dim)">· Zona UTM ${State.zoneNumber}${State.zoneLetterN?'N':'S'}</span></div>`;
-
+    const esc = escapeHtml;
+    const inp = 'background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;';
+    const MATERIALS = ['PVC','HDPE/PEAD','Hierro fundido','Acero','Concreto','Asbesto-cemento','Cobre','Otro'];
+    const ESTADOS = ['Operativo','Fuera de servicio','Mantenimiento','Desconocido'];
+    const opts = (list, cur) => list.map(m => `<option value="${esc(m)}" ${cur===m?'selected':''}>${esc(m)}</option>`).join('')
+      + (cur && !list.includes(cur) ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : '');
+    const S = State.settings;
+    const totalSegs = State.layers.reduce((n, l) => n + l.segmentsUTM.length, 0);
+ 
+    let html = `<div style="margin-bottom:6px;"><b>Capas (${State.layers.length}) · ${totalSegs} tramo(s)</b>
+      <span style="color:var(--text-dim)">· Zona UTM ${State.zoneNumber}${State.zoneLetterN?'N':'S'}</span></div>`;
+ 
+    html += `<details data-settings ${this._settingsOpen?'open':''} style="margin-bottom:8px;padding:6px 8px;border:1px solid #1c3529;border-radius:8px;">
+      <summary style="cursor:pointer;color:var(--accent);"><b>⚙️ Escala y altura</b></summary>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;font-size:.65rem;">
+        <label>Altura del teléfono sobre el piso <input type="number" step="0.1" min="0" value="${S.phoneHeight}" data-setting="phoneHeight" style="${inp}width:55px;"> m</label>
+        <label>Subir / bajar toda la red <input type="number" step="0.1" value="${S.vOffset}" data-setting="vOffset" style="${inp}width:55px;"> m</label>
+        <label>Grosor visual × <input type="number" step="0.5" min="1" max="20" value="${S.thickness}" data-setting="thickness" style="${inp}width:50px;"> (1 = diámetro real)</label>
+        <label><input type="checkbox" data-setting="atSurface" ${S.atSurface?'checked':''}> Ver a nivel de piso (ignorar profundidad)</label>
+        <label><input type="checkbox" data-setting="useGpsAlt" ${S.useGpsAlt?'checked':''}> Usar altitud del GPS (poco fiable)</label>
+      </div></details>`;
+ 
+    if (totalSegs > 6){
+      html += `<input type="search" id="segFilter" placeholder="Buscar tramo, carpeta o código…" style="${inp}width:100%;margin-bottom:6px;padding:6px 8px;">`;
+    }
+ 
     State.layers.forEach((layer, li) => {
       const colorHex = '#' + layer.color.toString(16).padStart(6,'0');
       html += `<div style="margin:8px 0;padding:8px;border:1px solid #1c3529;border-radius:8px;background:#0a1712;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <input type="color" value="${colorHex}" data-layer="${li}" data-action="color"
-            style="width:28px;height:28px;border:none;background:none;padding:0;cursor:pointer;">
-          <b style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${layer.fileName}</b>
-          <button data-layer="${li}" data-action="toggle" class="layerBtn" style="background:${layer.visible?'var(--accent)':'#254236'};color:${layer.visible?'#062018':'var(--text-dim)'};border:none;border-radius:5px;padding:4px 7px;cursor:pointer;font-family:var(--mono);font-size:.7rem;">${layer.visible?'👁️':'🚫'}</button>
-          <button data-layer="${li}" data-action="remove" class="layerBtn" style="background:#3a1212;color:#ffc4c4;border:1px solid var(--err);border-radius:5px;padding:4px 7px;cursor:pointer;font-family:var(--mono);font-size:.7rem;">🗑</button>
-        </div>`;
-
+          <input type="color" value="${colorHex}" data-layer="${li}" data-action="color" style="width:28px;height:28px;border:none;background:none;padding:0;cursor:pointer;">
+          <b style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(layer.fileName)} <span style="color:var(--text-dim);font-weight:normal;">(${layer.segmentsUTM.length})</span></b>
+          <button data-layer="${li}" data-action="toggle" class="layerBtn" style="background:${layer.visible?'var(--accent)':'#254236'};color:${layer.visible?'#062018':'var(--text-dim)'};border:none;border-radius:5px;padding:4px 7px;cursor:pointer;">${layer.visible?'👁️':'🚫'}</button>
+          <button data-layer="${li}" data-action="remove" class="layerBtn" style="background:#3a1212;color:#ffc4c4;border:1px solid var(--err);border-radius:5px;padding:4px 7px;cursor:pointer;">🗑</button>
+        </div>
+        <details data-open-layer="${li}" ${layer.open?'open':''}>
+          <summary style="cursor:pointer;color:var(--accent);margin-top:6px;">Tramos y propiedades (${layer.segmentsUTM.length})</summary>
+          <div style="margin-top:6px;padding:6px;border:1px dashed #254236;border-radius:6px;font-size:.62rem;" data-bulk-box="${li}">
+            <b>Aplicar a TODOS los tramos de este KMZ</b> <span style="color:var(--text-dim)">(deja vacío lo que no quieras cambiar)</span>
+            <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;align-items:center;">
+              <label>Ø <input type="number" min="1" data-bulk="diameterMm" placeholder="mm" style="${inp}width:50px;"></label>
+              <label>Prof. <input type="number" min="0" step="0.1" data-bulk="depthM" placeholder="m" style="${inp}width:45px;"></label>
+              <select data-bulk="material" style="${inp}"><option value="">Material…</option>${MATERIALS.map(m=>`<option>${esc(m)}</option>`).join('')}</select>
+              <select data-bulk="estado" style="${inp}"><option value="">Estado…</option>${ESTADOS.map(m=>`<option>${esc(m)}</option>`).join('')}</select>
+              <button data-layer="${li}" data-action="bulk" class="layerBtn" style="background:var(--accent);color:#062018;border:none;border-radius:5px;padding:5px 9px;cursor:pointer;">Aplicar</button>
+            </div>
+          </div>`;
+ 
       layer.segmentsUTM.forEach((seg, i) => {
-        const label = seg.name && seg.name.trim() ? seg.name.trim() : `Tramo ${i+1}`;
-        const diamFromKmz = seg.extendedData && Object.keys(seg.extendedData).some(k => /diam/i.test(k) || k.toLowerCase()==='dn');
-        const depthFromKmz = seg.extendedData && Object.keys(seg.extendedData).some(k => /prof|depth|cover|tapada/i.test(k));
-        html += `<div style="margin-top:8px;padding-top:8px;border-top:1px dashed #1c3529;font-size:.65rem;">
-          <b>${label}</b> <span style="color:var(--text-dim)">(${seg.geomType}, ${seg.verticesLatLon.length} pts)</span>`;
-        if (seg.description) html += `<br><span style="color:var(--text-dim)">${seg.description}</span>`;
+        const diamFromKmz = Object.keys(seg.extendedData).some(k => /diam/i.test(k) || k.toLowerCase()==='dn');
+        const depthFromKmz = Object.keys(seg.extendedData).some(k => /prof|depth|cover|tapada/i.test(k));
+        const search = (seg.name + ' ' + seg.folder + ' ' + seg.codigo + ' ' + seg.material).toLowerCase();
+        const dsc = seg.description ? (seg.description.length > 220 ? seg.description.slice(0,220) + '…' : seg.description) : '';
         const propKeys = Object.keys(seg.extendedData);
-        if (propKeys.length){
-          html += '<br>' + propKeys.map(k => `${k}: <span style="color:var(--accent)">${seg.extendedData[k]}</span>`).join(' · ');
-        }
-        html += `<div style="display:flex;gap:10px;margin-top:6px;align-items:center;flex-wrap:wrap;">
-          <label style="display:flex;gap:4px;align-items:center;">Ø
-            <input type="number" min="1" step="1" value="${seg.diameterMm}" data-layer="${li}" data-seg="${i}" data-field="diameterMm"
-              style="width:55px;background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;">mm
-            ${diamFromKmz?'<span style="color:var(--text-dim);font-size:.58rem;">(KMZ)</span>':'<span style="color:var(--warn);font-size:.58rem;">(def.)</span>'}
-          </label>
-          <label style="display:flex;gap:4px;align-items:center;">Prof.
-            <input type="number" min="0" step="0.1" value="${seg.depthM}" data-layer="${li}" data-seg="${i}" data-field="depthM"
-              style="width:50px;background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;">m
-            ${depthFromKmz?'<span style="color:var(--text-dim);font-size:.58rem;">(KMZ)</span>':'<span style="color:var(--warn);font-size:.58rem;">(def.)</span>'}
-          </label>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">
-          <label>Material
-            <select data-layer="${li}" data-seg="${i}" data-field="material" style="background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;">
-              ${['PVC','HDPE/PEAD','Hierro fundido','Acero','Concreto','Asbesto-cemento','Cobre','Otro'].map(m=>`<option value="${m}" ${seg.material===m?'selected':''}>${m}</option>`).join('')}
-            </select>
-          </label>
-          <label>Estado
-            <select data-layer="${li}" data-seg="${i}" data-field="estado" style="background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;">
-              ${['Operativo','Fuera de servicio','Mantenimiento','Desconocido'].map(s=>`<option value="${s}" ${seg.estado===s?'selected':''}>${s}</option>`).join('')}
-            </select>
-          </label>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">
-          <label>Código <input type="text" value="${seg.codigo||''}" placeholder="ID" data-layer="${li}" data-seg="${i}" data-field="codigo" style="width:60px;background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;"></label>
-          <label>Presión <input type="text" value="${seg.presion||''}" placeholder="bar" data-layer="${li}" data-seg="${i}" data-field="presion" style="width:50px;background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;"></label>
-          <label>Instal. <input type="text" value="${seg.fecha||''}" placeholder="año" data-layer="${li}" data-seg="${i}" data-field="fecha" style="width:55px;background:#08120e;border:1px solid #254236;color:var(--accent);border-radius:4px;padding:3px 5px;font-family:var(--mono);font-size:.65rem;"></label>
-        </div></div>`;
+        const f = (field, extra) => `data-layer="${li}" data-seg="${i}" data-field="${field}" ${extra||''}`;
+        html += `<div class="segCard" data-search="${esc(search)}" style="margin-top:8px;padding-top:8px;border-top:1px dashed #1c3529;font-size:.65rem;">
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="text" value="${esc(seg.name)}" placeholder="Tramo ${i+1}" ${f('name')} style="${inp}flex:1;min-width:0;font-weight:bold;">
+            <span style="color:var(--text-dim);white-space:nowrap;">${esc(seg.geomType)} · ${seg.verticesLatLon.length} pts</span>
+          </div>
+          ${seg.folder ? `<div style="color:var(--text-dim);">📁 ${esc(seg.folder)}</div>` : ''}
+          ${dsc ? `<div style="color:var(--text-dim);">${esc(dsc)}</div>` : ''}
+          ${propKeys.length ? '<div>' + propKeys.map(k => `${esc(k)}: <span style="color:var(--accent)">${esc(seg.extendedData[k])}</span>`).join(' · ') + '</div>' : ''}
+          <div style="display:flex;gap:10px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+            <label>Ø <input type="number" min="1" step="1" value="${seg.diameterMm}" ${f('diameterMm')} style="${inp}width:55px;">mm ${diamFromKmz?'<span style="color:var(--text-dim);font-size:.58rem;">(KMZ)</span>':'<span style="color:var(--warn);font-size:.58rem;">(def.)</span>'}</label>
+            <label>Prof. <input type="number" min="0" step="0.1" value="${seg.depthM}" ${f('depthM')} style="${inp}width:50px;">m ${depthFromKmz?'<span style="color:var(--text-dim);font-size:.58rem;">(KMZ)</span>':'<span style="color:var(--warn);font-size:.58rem;">(def.)</span>'}</label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+            <label>Material <select ${f('material')} style="${inp}">${opts(MATERIALS, seg.material)}</select></label>
+            <label>Estado <select ${f('estado')} style="${inp}">${opts(ESTADOS, seg.estado)}</select></label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+            <label>Código <input type="text" value="${esc(seg.codigo)}" placeholder="ID" ${f('codigo')} style="${inp}width:60px;"></label>
+            <label>Presión <input type="text" value="${esc(seg.presion)}" placeholder="bar" ${f('presion')} style="${inp}width:50px;"></label>
+            <label>Instal. <input type="text" value="${esc(seg.fecha)}" placeholder="año" ${f('fecha')} style="${inp}width:55px;"></label>
+          </div></div>`;
       });
-      html += `</div>`;
+      html += `</details></div>`;
     });
-
+ 
     info.innerHTML = html;
     info.classList.add('show');
     this._wireLayersPanelEvents();
   },
-
+ 
+  _rebuildAllLayers(){
+    State.layers.forEach(l => SceneModule.rebuildLayer(l, State.anchorUTM));
+  },
+ 
   _wireLayersPanelEvents(){
     const info = $('kmzInfo');
-
-    // Color picker por capa
+ 
+    // Ajustes globales de escala / altura
+    info.querySelectorAll('[data-setting]').forEach(el => {
+      el.addEventListener('change', (e) => {
+        const key = e.target.dataset.setting;
+        if (e.target.type === 'checkbox') State.settings[key] = e.target.checked;
+        else {
+          const v = parseFloat(e.target.value);
+          if (isNaN(v)) return;
+          State.settings[key] = v;
+        }
+        if (key === 'atSurface' || key === 'thickness') this._rebuildAllLayers();
+        if ((key === 'vOffset' || key === 'useGpsAlt') && State.userLatLon) this.onGpsUpdate(State.userLatLon);
+      });
+    });
+    const sd = info.querySelector('details[data-settings]');
+    if (sd) sd.addEventListener('toggle', (e)=>{ this._settingsOpen = e.target.open; });
+ 
+    // Recordar qué KMZ está desplegado
+    info.querySelectorAll('details[data-open-layer]').forEach(d => {
+      d.addEventListener('toggle', (e)=>{
+        const layer = State.layers[parseInt(e.target.dataset.openLayer, 10)];
+        if (layer) layer.open = e.target.open;
+      });
+    });
+ 
+    // Buscador de tramos
+    const filter = $('segFilter');
+    if (filter){
+      filter.addEventListener('input', ()=>{
+        const q = filter.value.trim().toLowerCase();
+        if (q) info.querySelectorAll('details[data-open-layer]').forEach(d => { d.open = true; });
+        info.querySelectorAll('.segCard').forEach(c => {
+          c.style.display = (!q || c.dataset.search.includes(q)) ? '' : 'none';
+        });
+      });
+    }
+ 
+    // Color por capa
     info.querySelectorAll('input[type=color][data-layer]').forEach(inp => {
       inp.addEventListener('input', (e) => {
-        const li = parseInt(e.target.dataset.layer, 10);
-        const layer = State.layers[li];
+        const layer = State.layers[parseInt(e.target.dataset.layer, 10)];
         if (!layer) return;
         layer.color = parseInt(e.target.value.replace('#','0x'), 16);
         SceneModule.rebuildLayer(layer, State.anchorUTM);
       });
     });
-
-    // Botones visibilidad / eliminar
+ 
+    // Visibilidad / eliminar / aplicar a todos
     info.querySelectorAll('.layerBtn[data-action]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const li = parseInt(e.currentTarget.dataset.layer, 10);
@@ -1580,46 +1708,55 @@ const App = {
             $('valKmz').textContent = `${State.layers.length} capa(s) cargada(s)`;
           }
           this.renderLayersPanel();
+        } else if (action === 'bulk'){
+          const box = info.querySelector(`[data-bulk-box="${li}"]`);
+          const get = (f) => box.querySelector(`[data-bulk="${f}"]`).value;
+          const diam = parseFloat(get('diameterMm')), depth = parseFloat(get('depthM'));
+          const mat = get('material'), est = get('estado');
+          layer.segmentsUTM.forEach(seg => {
+            if (!isNaN(diam) && diam > 0) seg.diameterMm = diam;
+            if (!isNaN(depth) && depth >= 0) seg.depthM = depth;
+            if (mat) seg.material = mat;
+            if (est) seg.estado = est;
+          });
+          SceneModule.rebuildLayer(layer, State.anchorUTM);
+          this.renderLayersPanel();
         }
       });
     });
-
-    // Campos de diámetro/profundidad/material/etc por tramo
-    info.querySelectorAll('input[data-seg], select[data-seg]').forEach(inp => {
+ 
+    // Campos de cada tramo
+    info.querySelectorAll('[data-seg]').forEach(el => {
       const geometryFields = ['diameterMm', 'depthM'];
-      inp.addEventListener('change', (e) => {
-        const li = parseInt(e.target.dataset.layer, 10);
-        const idx = parseInt(e.target.dataset.seg, 10);
+      el.addEventListener('change', (e) => {
+        const layer = State.layers[parseInt(e.target.dataset.layer, 10)];
+        const seg = layer && layer.segmentsUTM[parseInt(e.target.dataset.seg, 10)];
+        if (!seg) return;
         const field = e.target.dataset.field;
-        const layer = State.layers[li];
-        if (!layer || !layer.segmentsUTM[idx]) return;
         if (geometryFields.includes(field)){
           const val = parseFloat(e.target.value);
-          if (!isNaN(val)){
-            layer.segmentsUTM[idx][field] = val;
-            SceneModule.rebuildLayer(layer, State.anchorUTM);
-          }
+          if (!isNaN(val)){ seg[field] = val; SceneModule.rebuildLayer(layer, State.anchorUTM); }
         } else {
-          layer.segmentsUTM[idx][field] = e.target.value;
+          seg[field] = e.target.value;
         }
       });
     });
   },
-
-
+ 
+ 
 };
-
+ 
 /* ============================================================
    EVENTOS UI
 ============================================================ */
 $('btnStart').addEventListener('click', ()=> App.start());
-
+ 
 function triggerKmzPicker(){
   $('kmzFileInput').click();
 }
 $('btnLoadKmzStart').addEventListener('click', triggerKmzPicker);
 $('btnLoadKmzHud').addEventListener('click', triggerKmzPicker);
-
+ 
 $('kmzFileInput').addEventListener('change', async (e)=>{
   const files = Array.from(e.target.files || []);
   // Cargamos en secuencia (no en paralelo) para que la primera defina el
@@ -1629,11 +1766,11 @@ $('kmzFileInput').addEventListener('change', async (e)=>{
   }
   e.target.value = '';
 });
-
+ 
 $('statusHead').addEventListener('click', ()=>{
   $('statusPanel').classList.toggle('collapsed');
 });
-
+ 
 /* ============================================================
    MODO MANUAL: arrastre (mouse/touch) + teclado
    Se usa cuando no hay sensores de orientación (desktop) o cuando el
@@ -1652,20 +1789,20 @@ function setManualMode(on){
     $('watchdogToast').classList.remove('show');
   }
 }
-
+ 
 $('btnManualMode').addEventListener('click', ()=> setManualMode(!State.manualMode));
-
+ 
 $('btnProps').addEventListener('click', ()=>{
   $('kmzInfo').classList.toggle('open');
   $('btnProps').classList.toggle('on');
 });
-
+ 
 $('btnLayerToggle').addEventListener('click', ()=>{
   SceneModule.pipelineGroup.visible = !SceneModule.pipelineGroup.visible;
   $('btnLayerToggle').classList.toggle('on', SceneModule.pipelineGroup.visible);
   $('btnLayerToggle').textContent = SceneModule.pipelineGroup.visible ? '👁️' : '🚫';
 });
-
+ 
 /* ============================================================
    TOGGLE: Vista AR (primera persona) <-> Vista en planta (arriba)
 ============================================================ */
@@ -1685,7 +1822,7 @@ function setViewMode(mode){
     CameraModule.start().catch(e => showErrToast('Cámara: ' + e.message, 6000));
   }
 }
-
+ 
 $('btnPlanView').addEventListener('click', ()=>{
   setViewMode(State.viewMode === 'plan' ? 'ar' : 'plan');
 });
@@ -1700,7 +1837,7 @@ $('btnPlanHeading').addEventListener('click', ()=>{
   $('btnPlanHeading').classList.toggle('on', State.planHeadingUp);
 });
 $('btnPlanCenter').addEventListener('click', ()=> PlanViewModule.recenter());
-
+ 
 // Bucle de dibujo de la vista en planta (independiente del render loop de
 // Three.js): solo dibuja cuando esa vista está activa, así no compite por
 // recursos con la vista AR cuando no se está usando.
@@ -1709,22 +1846,32 @@ function planViewLoop(){
   requestAnimationFrame(planViewLoop);
 }
 requestAnimationFrame(planViewLoop);
-
+ 
 // Activación automática: si el watchdog de orientación avisa (sin datos de
 // sensor por 3s, típico en laptop/PC sin giroscopio), pasamos a manual solo
 // una vez, para no interrumpir si el usuario ya lo desactivó a propósito.
-const _origToggleWatchdog = OrientationModule.startWatchdog.bind(OrientationModule);
 OrientationModule.startWatchdog = function(){
   State.lastOrientationEventTs = Date.now();
+  let toastFilled = false;
   setInterval(()=>{
     const elapsed = Date.now() - State.lastOrientationEventTs;
     if (elapsed > 3000){
-      if (!State.manualMode && !State.manualAutoSuggested){
+      if (!IS_MOBILE && !State.manualMode && !State.manualAutoSuggested){
+        // Solo en PC/laptop (sin giroscopio) pasamos a manual automáticamente.
         State.manualAutoSuggested = true;
         State.manualAuto = true;
         setManualMode(true);
-        logPerm('Sin sensores de orientación (¿desktop?) → modo manual activado automáticamente.', null);
+        logPerm('Sin sensores de orientación (¿PC?) → modo manual activado automáticamente.', null);
       } else if (!State.manualMode){
+        if (!toastFilled){
+          toastFilled = true;
+          $('watchdogToast').innerHTML =
+            '⚠️ El navegador NO está entregando el giroscopio/brújula' +
+            (State.genericError ? ' (' + State.genericError + ')' : '') + '.<br>' +
+            'En Chrome: toca el ícono junto a la dirección → <b>Configuración del sitio</b> → ' +
+            '<b>Sensores de movimiento</b> → <b>Permitir</b>, y recarga. ' +
+            'Debe abrirse desde una dirección <b>https://</b> en Chrome (no desde WhatsApp).';
+        }
         $('watchdogToast').classList.add('show');
       }
     } else {
@@ -1732,7 +1879,7 @@ OrientationModule.startWatchdog = function(){
     }
   }, 1000);
 };
-
+ 
 /* ============================================================
    GESTOS (dedo / mouse)
    - Con sensores: el TELÉFONO mueve la vista. El dedo solo inspecciona:
@@ -1743,11 +1890,11 @@ const DRAG_SENS = 0.25; // grados por pixel arrastrado
 const appEl = $('app');
 const pointers = new Map();
 let pinchLast = 0, lastTapTs = 0, movedSinceDown = false;
-
+ 
 const isUITarget = (t)=> t && t.closest && t.closest('.iconBtn, #statusPanel, #kmzInfo, #planZoomControls, #startScreen, button, input, select, label');
 const clamp = (v, lo, hi)=> Math.max(lo, Math.min(hi, v));
 const pointerDist = ()=>{ const [a, b] = [...pointers.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
-
+ 
 function handleDrag(dx, dy){
   if (State.viewMode === 'plan'){ PlanViewModule.pan(dx, dy); return; }
   if (State.manualMode){
@@ -1767,7 +1914,7 @@ function resetInspection(){
   State.viewYaw = 0; State.viewPitch = 0; State.viewDolly = 0;
   PlanViewModule.recenter();
 }
-
+ 
 appEl.addEventListener('pointerdown', (e)=>{
   if (isUITarget(e.target)) return;
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1804,7 +1951,7 @@ appEl.addEventListener('wheel', (e)=>{
   e.preventDefault();
   handlePinch(e.deltaY < 0 ? 1.12 : 0.89);
 }, { passive:false });
-
+ 
 // Flechas del teclado (útil en desktop, o control fino en cualquier lado)
 window.addEventListener('keydown', (e)=>{
   if (!State.manualMode) return;
@@ -1816,7 +1963,7 @@ window.addEventListener('keydown', (e)=>{
   else return;
   e.preventDefault();
 });
-
+ 
 // Mantenemos el HUD de azimut/compás sincronizado también en modo manual
 setInterval(()=>{
   if (!State.manualMode) return;
@@ -1824,10 +1971,10 @@ setInterval(()=>{
   $('valAzimuth').textContent = h.toFixed(1) + '° (manual)';
   $('compassNeedle').style.transform = `rotate(${h}deg)`;
 }, 150);
-
+ 
 // Chequeo inicial de contexto seguro (informativo desde el arranque)
 checkSecureContext();
-
+ 
 // Registro del Service Worker: requisito para que la app sea "instalable"
 // (PWA) y empaquetable como app Android real (TWA) para la Play Store.
 if ('serviceWorker' in navigator){
@@ -1835,8 +1982,11 @@ if ('serviceWorker' in navigator){
     navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
   });
 }
-
+ 
 })();
 </script>
 </body>
 </html>
+ 
+
+
